@@ -4,7 +4,7 @@
 
 gcloud compute \
         --project=${PROJECT} \
-        instances create nn1 \
+        instances create hm1 \
         --zone=us-west1-b \
         --machine-type=n1-highmem-2 \
         --subnet=default \
@@ -16,12 +16,12 @@ gcloud compute \
         --image-project=${OS_PROJECT} \
         --boot-disk-size=${BOOT_DISK} \
         --boot-disk-type=pd-standard \
-        --boot-disk-device-name=nn1 \
+        --boot-disk-device-name=hm1 \
 	--metadata-from-file startup-script=scripts/hadoop-node-script.sh
  
 gcloud compute \
         --project=${PROJECT} \
-        instances create nn2 \
+        instances create hm2 \
         --zone=us-west1-c \
         --machine-type=n1-highmem-2 \
         --subnet=default \
@@ -33,6 +33,6 @@ gcloud compute \
         --image-project=${OS_PROJECT} \
         --boot-disk-size=${BOOT_DISK} \
         --boot-disk-type=pd-standard \
-        --boot-disk-device-name=nn2 \
+        --boot-disk-device-name=hm2 \
 	--metadata-from-file startup-script=scripts/hadoop-node-script.sh
 

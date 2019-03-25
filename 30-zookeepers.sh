@@ -16,7 +16,8 @@ gcloud compute \
         --image-project=${OS_PROJECT} \
         --boot-disk-size=${BOOT_DISK} \
         --boot-disk-type=pd-standard \
-        --boot-disk-device-name=zk1
+        --boot-disk-device-name=zk1 \
+	--metadata-from-file startup-script=scripts/hadoop-node-script.sh
  
 gcloud compute \
         --project=${PROJECT} \
@@ -32,7 +33,8 @@ gcloud compute \
         --image-project=${OS_PROJECT} \
         --boot-disk-size=${BOOT_DISK} \
         --boot-disk-type=pd-standard \
-        --boot-disk-device-name=zk2
+        --boot-disk-device-name=zk2 \
+	--metadata-from-file startup-script=scripts/hadoop-node-script.sh
  
 gcloud compute \
         --project=${PROJECT} \
@@ -48,5 +50,6 @@ gcloud compute \
         --image-project=${OS_PROJECT} \
         --boot-disk-size=${BOOT_DISK} \
         --boot-disk-type=pd-standard \
-        --boot-disk-device-name=zk3
+        --boot-disk-device-name=zk3 \
+	--metadata-from-file startup-script=scripts/hadoop-node-script.sh
 
