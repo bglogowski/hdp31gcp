@@ -1727,7 +1727,7 @@ EOF
 
 
 
-for app in ambari mapred oozie hive ranger rangerkms
+for app in mapred oozie hive ranger rangerkms
 do
 
   sudo -u postgres createuser $app
