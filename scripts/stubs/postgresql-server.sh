@@ -29,6 +29,8 @@ ALTER SCHEMA ambarischema OWNER TO ambariuser;
 ALTER ROLE ambariuser SET search_path to 'ambarischema', 'public';
 EOF
 
+sleep 30
+
 { cat | sudo -u postgres psql ambaridb; } << EOF
 --
 -- Licensed to the Apache Software Foundation (ASF) under one
