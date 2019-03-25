@@ -17,5 +17,5 @@ gcloud compute \
         --image-project=${OS_PROJECT} \
         --boot-disk-size=${BOOT_DISK} \
         --boot-disk-type=pd-standard \
-	--metadata-from-file startup-script=scriptes/ambari-server-script.sh
+	--metadata-from-file startup-script=scripts/ambari-server-script.sh
 
