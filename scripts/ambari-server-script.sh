@@ -36,14 +36,16 @@ wget -nv http://public-repo-1.hortonworks.com/ambari/centos7/2.x/updates/2.7.3.0
 
 yum install -y ambari-server
 /sbin/ambari-server setup \
-	--silent \
 	--jdbc-db=postgres \
 	--jdbc-driver=/opt/postgresql/postgresql-42.2.5.jar \
+/sbin/ambari-server setup \
+	--silent \
 	--database=postgres \
 	--databasehost=postgres \
 	--databaseport=5432 \
-	--databasename=ambari \
-	--databaseusername=ambari \
+	--databasename=ambaridb \
+	--postgresschema=ambarischema \
+	--databaseusername=ambariuser \
 	--databasepassword=++++++++++++++
 /sbin/ambari-server start
 

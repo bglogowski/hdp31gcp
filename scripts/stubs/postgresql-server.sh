@@ -17,8 +17,6 @@ sed -i -e"s/#port = 5432/port = 5432/" /var/lib/pgsql/9.6/data/postgresql.conf
 /bin/systemctl enable postgresql-9.6
 /bin/systemctl start postgresql-9.6.service
 
-cat <<EOF
-
 { cat | sudo -u postgres psql; } << EOF
 CREATE DATABASE ambaridb; 
 CREATE USER ambariuser WITH PASSWORD '++++++++++++++';
@@ -29,7 +27,6 @@ ALTER SCHEMA ambarischema OWNER TO ambariuser;
 ALTER ROLE ambariuser SET search_path to 'ambarischema', 'public';
 EOF
 
-sleep 30
 
 { cat | sudo -u postgres psql ambaridb; } << EOF
 --
