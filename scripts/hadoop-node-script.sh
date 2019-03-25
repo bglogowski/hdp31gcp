@@ -10,12 +10,12 @@ sed -i -e"s/^SELINUX=.*$/SELINUX=disabled/" /etc/selinux/config
 
 # epel.sh
 
+yum install -y wget
 yum install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
 yum update -y
 
 # ambari.sh
 
-yum install -y wget
 wget -nv http://public-repo-1.hortonworks.com/ambari/centos7/2.x/updates/2.7.3.0/ambari.repo -O /etc/yum.repos.d/ambari.repo
 
 # ambari-agent.sh

@@ -1,6 +1,6 @@
 # postgresql-server.sh
 
-/usr/pgsql-9.6//bin/postgresql96-setup initdb
+/usr/pgsql-9.6/bin/postgresql96-setup initdb
 
 cat > /var/lib/pgsql/9.6/data/pg_hba.conf <<EOF
 local   all   postgres                                                           peer
