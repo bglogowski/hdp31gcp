@@ -1,3 +1,13 @@
+# selinux.sh
+
+sudo setenforce 0
+sed -i -e"s/^SELINUX=.*$/SELINUX=disabled/" /etc/selinux/config
+
+# firewalld.sh
+
+/bin/systemctl stop firewalld.service
+/bin/systemctl disable firewalld
+
 # epel.sh
 
 yum install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
@@ -20,4 +30,6 @@ wget -nv http://public-repo-1.hortonworks.com/ambari/centos7/2.x/updates/2.7.3.0
 # ambari-server.sh
 
 yum install -y ambari-server
+/sbin/ambari-server setup --silent
+/sbin/ambari-server start
 

@@ -1,3 +1,13 @@
+# selinux.sh
+
+sudo setenforce 0
+sed -i -e"s/^SELINUX=.*$/SELINUX=disabled/" /etc/selinux/config
+
+# firewalld.sh
+
+/bin/systemctl stop firewalld.service
+/bin/systemctl disable firewalld
+
 # epel.sh
 
 yum install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
