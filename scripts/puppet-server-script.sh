@@ -41,6 +41,8 @@ yum install -y puppetserver
 
 /usr/pgsql-9.6/bin/postgresql96-setup initdb
 
+ln -s /usr/pgsql-9.6/bin/initdb /usr/bin/initdb
+
 cat > /var/lib/pgsql/9.6/data/pg_hba.conf <<EOF
 # TYPE  DATABASE        USER            ADDRESS                 METHOD
 local   all             postgres                                peer
@@ -87,5 +89,7 @@ EOF
 
 yum -y install https://yum.theforeman.org/releases/1.20/el7/x86_64/foreman-release.rpm
 yum -y install foreman-installer
-#foreman-installer
+
+#foreman-installer \
+#	--enable-foreman-plugin-puppetdb
 
