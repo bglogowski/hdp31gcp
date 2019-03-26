@@ -30,7 +30,7 @@ chmod 0644 /opt/postgresql/postgresql-42.2.5.jar
 
 # puppet-server.sh
 
-yum install -y https://yum.puppet.com/puppet6/puppet6-release-el-7.noarch.rpm
+yum install -y https://yum.puppet.com/puppet5/puppet5-release-el-7.noarch.rpm
 
 yum install -y puppetserver
 /bin/systemctl enable puppetserver
@@ -83,5 +83,9 @@ EOF
 /bin/systemctl start puppetdb.service
 
 /bin/systemctl restart puppetserver.service
+/opt/puppetlabs/bin/puppet agent --test
 
+yum -y install https://yum.theforeman.org/releases/1.20/el7/x86_64/foreman-release.rpm
+yum -y install foreman-installer
+#foreman-installer
 
