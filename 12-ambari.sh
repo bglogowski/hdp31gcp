@@ -56,7 +56,7 @@ gcloud compute \
 gcloud compute \
         --project=${PROJECT} \
         instances create analyzer \
-        --zone=us-west1-c \
+        --zone=us-west1-a \
         --machine-type=n1-standard-4 \
         --subnet=default \
         --network-tier=PREMIUM \
@@ -73,7 +73,7 @@ gcloud compute \
 gcloud compute \
         --project=${PROJECT} \
         instances create metrics1 \
-        --zone=us-west1-b \
+        --zone=us-west1-a \
         --machine-type=n1-standard-2 \
         --subnet=default \
         --network-tier=PREMIUM \
@@ -90,7 +90,7 @@ gcloud compute \
 gcloud compute \
         --project=${PROJECT} \
         instances create metrics2 \
-        --zone=us-west1-c \
+        --zone=us-west1-a \
         --machine-type=n1-standard-2 \
         --subnet=default \
         --network-tier=PREMIUM \
