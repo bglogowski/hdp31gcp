@@ -8,50 +8,13 @@ yum install -y puppetserver
 
 /opt/puppetlabs/bin/puppet agent --test
 
-
-/usr/pgsql-9.6/bin/postgresql96-setup initdb
-
-cat > /var/lib/pgsql/9.6/data/pg_hba.conf <<EOF
-# TYPE  DATABASE        USER            ADDRESS                 METHOD
-local   all             postgres                                peer
-host    all             postgres        127.0.0.1/32            ident
-host    all             postgres        ::1/128                 ident
-host    all             puppetdb        127.0.0.1/32            md5
-host    all             puppetdb        ::1/128                 md5
-host    all             puppetdb        10.0.0.0/8              md5
-host    all             foreman         127.0.0.1/32            md5
-host    all             foreman         ::1/128                 md5
-host    all             foreman         10.0.0.0/8              md5
-EOF
-EOF
-
-sed -i -e"s/#listen_addresses = 'localhost'/listen_addresses = '*'/" /var/lib/pgsql/9.6/data/postgresql.conf
-sed -i -e"s/#port = 5432/port = 5432/" /var/lib/pgsql/9.6/data/postgresql.conf
-
-/bin/systemctl enable postgresql-9.6
-/bin/systemctl start postgresql-9.6.service
-
-{ cat | sudo -u postgres psql; } << EOF
-CREATE DATABASE puppetdb;
-CREATE USER puppetdb WITH PASSWORD '++++++++++++++';
-GRANT ALL PRIVILEGES ON DATABASE puppetdb TO puppetdb;
-\connect puppetdb;
-CREATE SCHEMA puppetdb AUTHORIZATION puppetdb;
-ALTER SCHEMA puppetdb OWNER TO puppetdb;
-ALTER ROLE puppetdb SET search_path to 'puppetdb', 'public';
-EOF
-
-{ cat | sudo -u postgres psql; } << EOF
-CREATE DATABASE foreman;
-CREATE USER foreman WITH PASSWORD '++++++++++++++';
-GRANT ALL PRIVILEGES ON DATABASE foreman TO foreman;
-\connect foreman;
-CREATE SCHEMA foreman AUTHORIZATION foreman;
-ALTER SCHEMA foreman OWNER TO foreman;
-ALTER ROLE foreman SET search_path to 'foreman', 'public';
-EOF
-
-
+/opt/puppetlabs/bin/puppet module install puppetlabs-stdlib --version 5.2.0
+/opt/puppetlabs/bin/puppet module install puppetlabs-java --version 3.3.0
+/opt/puppetlabs/bin/puppet module install puppetlabs-concat --version 5.3.0
+/opt/puppetlabs/bin/puppet module install puppetlabs-puppet_agent --version 2.1.0
+/opt/puppetlabs/bin/puppet module install puppetlabs-augeas_core --version 1.0.4
+/opt/puppetlabs/bin/puppet module install puppetlabs-sshkeys_core --version 1.0.2
+/opt/puppetlabs/bin/puppet module install puppetlabs-host_core --version 1.0.2
 
 yum install -y puppetdb
 /opt/puppetlabs/bin/puppetdb ssl-setup -f

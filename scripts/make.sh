@@ -1,7 +1,7 @@
 #!/bin/bash
 
 /bin/rm puppet-server-script.sh
-for i in selinux.sh firewalld.sh epel.sh pgdg.sh postgresql.sh puppet-server.sh
+for i in selinux.sh firewalld.sh epel.sh puppet-server.sh
 do
   cat stubs/${i} >> puppet-server-script.sh
 done
