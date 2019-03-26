@@ -33,12 +33,16 @@ chmod 0644 /opt/postgresql/postgresql-42.2.5.jar
 /usr/pgsql-9.6/bin/postgresql96-setup initdb
 
 cat > /var/lib/pgsql/9.6/data/pg_hba.conf <<EOF
-local   all   postgres                                                           peer
-host    all   postgres                                         127.0.0.1/32      ident
-host    all   postgres                                         ::1/128           ident
-local   all   ambari,mapred,oozie,hive,ranger,rangerkms                          md5
-host    all   ambari,mapred,oozie,hive,ranger,rangerkms        0.0.0.0/0         md5
-host    all   ambari,mapred,oozie,hive,ranger,rangerkms        ::/0              md5
+# TYPE  DATABASE        USER            ADDRESS                 METHOD
+local   all             postgres                                peer
+host    all             postgres        127.0.0.1/32            ident
+host    all             postgres        ::1/128                 ident
+host    all             ambari          samenet                 md5
+host    all             mapred          samenet                 md5
+host    all             oozie           samenet                 md5
+host    all             hive            samenet                 md5
+host    all             ranger          samenet                 md5
+host    all             kms             samenet                 md5
 EOF
 
 sed -i -e"s/#listen_addresses = 'localhost'/listen_addresses = '*'/" /var/lib/pgsql/9.6/data/postgresql.conf
@@ -48,18 +52,18 @@ sed -i -e"s/#port = 5432/port = 5432/" /var/lib/pgsql/9.6/data/postgresql.conf
 /bin/systemctl start postgresql-9.6.service
 
 { cat | sudo -u postgres psql; } << EOF
-CREATE DATABASE ambaridb; 
-CREATE USER ambariuser WITH PASSWORD '++++++++++++++';
-GRANT ALL PRIVILEGES ON DATABASE ambaridb TO ambariuser; 
-\connect ambaridb; 
-CREATE SCHEMA ambarischema AUTHORIZATION ambariuser;
-ALTER SCHEMA ambarischema OWNER TO ambariuser;
-ALTER ROLE ambariuser SET search_path to 'ambarischema', 'public';
+CREATE DATABASE ambari; 
+CREATE USER ambari WITH PASSWORD '++++++++++++++';
+GRANT ALL PRIVILEGES ON DATABASE ambari TO ambari; 
+\connect ambari; 
+CREATE SCHEMA ambari AUTHORIZATION ambari;
+ALTER SCHEMA ambari OWNER TO ambari;
+ALTER ROLE ambari SET search_path to 'ambari', 'public';
 EOF
 
 
-{ cat | sudo -u postgres psql ambaridb; } << EOF
-SET ROLE ambariuser;
+{ cat | sudo -u postgres psql ambari; } << EOF
+SET ROLE ambari;
 --
 -- Licensed to the Apache Software Foundation (ASF) under one
 -- or more contributor license agreements.  See the NOTICE file
@@ -1757,7 +1761,7 @@ EOF
 
 
 
-for app in mapred oozie hive ranger rangerkms
+for app in mapred oozie hive ranger kms
 do
 
   sudo -u postgres createuser $app

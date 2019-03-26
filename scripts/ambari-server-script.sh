@@ -43,8 +43,8 @@ yum install -y ambari-server
 	--database=postgres \
 	--databasehost=postgres \
 	--databaseport=5432 \
-	--databasename=ambaridb \
-	--postgresschema=ambarischema \
+	--databasename=ambari \
+	--postgresschema=ambari \
 	--databaseusername=ambari \
 	--databasepassword=++++++++++++++
 /sbin/ambari-server start
