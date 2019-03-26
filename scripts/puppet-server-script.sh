@@ -41,8 +41,6 @@ yum install -y puppetserver
 
 /usr/pgsql-9.6/bin/postgresql96-setup initdb
 
-ln -s /usr/pgsql-9.6/bin/initdb /usr/bin/initdb
-
 cat > /var/lib/pgsql/9.6/data/pg_hba.conf <<EOF
 # TYPE  DATABASE        USER            ADDRESS                 METHOD
 local   all             postgres                                peer
@@ -51,6 +49,10 @@ host    all             postgres        ::1/128                 ident
 host    all             puppetdb        127.0.0.1/32            md5
 host    all             puppetdb        ::1/128                 md5
 host    all             puppetdb        10.0.0.0/8              md5
+host    all             foreman         127.0.0.1/32            md5
+host    all             foreman         ::1/128                 md5
+host    all             foreman         10.0.0.0/8              md5
+EOF
 EOF
 
 sed -i -e"s/#listen_addresses = 'localhost'/listen_addresses = '*'/" /var/lib/pgsql/9.6/data/postgresql.conf
@@ -68,6 +70,17 @@ CREATE SCHEMA puppetdb AUTHORIZATION puppetdb;
 ALTER SCHEMA puppetdb OWNER TO puppetdb;
 ALTER ROLE puppetdb SET search_path to 'puppetdb', 'public';
 EOF
+
+{ cat | sudo -u postgres psql; } << EOF
+CREATE DATABASE foreman;
+CREATE USER foreman WITH PASSWORD '++++++++++++++';
+GRANT ALL PRIVILEGES ON DATABASE foreman TO foreman;
+\connect foreman;
+CREATE SCHEMA foreman AUTHORIZATION foreman;
+ALTER SCHEMA foreman OWNER TO foreman;
+ALTER ROLE foreman SET search_path to 'foreman', 'public';
+EOF
+
 
 
 yum install -y puppetdb
@@ -87,9 +100,6 @@ EOF
 /bin/systemctl restart puppetserver.service
 /opt/puppetlabs/bin/puppet agent --test
 
-yum -y install https://yum.theforeman.org/releases/1.20/el7/x86_64/foreman-release.rpm
+yum -y install https://yum.theforeman.org/releases/1.21/el7/x86_64/foreman-release.rpm
 yum -y install foreman-installer
-
-#foreman-installer \
-#	--enable-foreman-plugin-puppetdb
 
