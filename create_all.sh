@@ -1,9 +1,8 @@
 #!/bin/bash
 
 #./01-firewall.sh
-./10-postgresql.sh &
+#./10-postgresql.sh &
 ./12-ambari.sh &
-./12-metrics.sh &
 ./20-namenodes.sh &
 ./22-resourcemanagers.sh &
 ./24-hbasemasters.sh &

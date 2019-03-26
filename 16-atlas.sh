@@ -4,7 +4,7 @@
 
 gcloud compute \
         --project=${PROJECT} \
-        instances create oozie \
+        instances create atlas \
         --zone=us-west1-b \
         --machine-type=n1-standard-4 \
         --subnet=default \
@@ -16,6 +16,6 @@ gcloud compute \
         --image-project=${OS_PROJECT} \
         --boot-disk-size=${BOOT_DISK} \
         --boot-disk-type=pd-standard \
-        --boot-disk-device-name=oozie \
-	--metadata-from-file startup-script=scripts/oozie-node-script.sh
+        --boot-disk-device-name=atlas \
+	--metadata-from-file startup-script=scripts/hadoop-node-script.sh
  

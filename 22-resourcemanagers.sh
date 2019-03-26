@@ -36,3 +36,4 @@ gcloud compute \
         --boot-disk-device-name=rm2 \
 	--metadata-from-file startup-script=scripts/hadoop-node-script.sh
 
+

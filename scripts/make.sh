@@ -20,4 +20,14 @@ do
   cat stubs/${i} >> hadoop-node-script.sh
 done
 
+for j in hive ranger kms oozie
+do
+  /bin/rm  ${j}-node-script.sh
+  for i in selinux.sh firewalld.sh epel.sh ambari.sh ambari-agent.sh mysql-server.sh
+  do
+    cat stubs/${i} >> ${j}-node-script.sh
+  done
+done
+
+
 chmod +x *.sh
