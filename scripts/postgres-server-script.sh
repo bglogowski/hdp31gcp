@@ -49,12 +49,12 @@ sed -i -e"s/#port = 5432/port = 5432/" /var/lib/pgsql/9.6/data/postgresql.conf
 
 { cat | sudo -u postgres psql; } << EOF
 CREATE DATABASE ambaridb; 
-CREATE USER ambariuser WITH PASSWORD '++++++++++++++';
-GRANT ALL PRIVILEGES ON DATABASE ambaridb TO ambariuser; 
+CREATE USER ambari WITH PASSWORD '++++++++++++++';
+GRANT ALL PRIVILEGES ON DATABASE ambaridb TO ambari; 
 \connect ambaridb; 
-CREATE SCHEMA ambarischema AUTHORIZATION ambariuser;
-ALTER SCHEMA ambarischema OWNER TO ambariuser;
-ALTER ROLE ambariuser SET search_path to 'ambarischema', 'public';
+CREATE SCHEMA ambarischema AUTHORIZATION ambari;
+ALTER SCHEMA ambarischema OWNER TO ambari;
+ALTER ROLE ambari SET search_path to 'ambarischema', 'public';
 EOF
 
 

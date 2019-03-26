@@ -11,7 +11,7 @@ yum install -y ambari-server
 	--databaseport=5432 \
 	--databasename=ambaridb \
 	--postgresschema=ambarischema \
-	--databaseusername=ambariuser \
+	--databaseusername=ambari \
 	--databasepassword=++++++++++++++
 /sbin/ambari-server start
 
