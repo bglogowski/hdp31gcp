@@ -30,6 +30,8 @@ chmod 0644 /opt/postgresql/postgresql-42.2.5.jar
 
 # puppet-server.sh
 
+yum install -y https://yum.puppet.com/puppet6/puppet6-release-el-7.noarch.rpm
+
 yum install -y puppetserver
 /bin/systemctl enable puppetserver
 /bin/systemctl start puppetserver.service
