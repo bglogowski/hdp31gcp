@@ -3,7 +3,7 @@
 yum install -y ambari-server
 /sbin/ambari-server setup \
 	--jdbc-db=postgres \
-	--jdbc-driver=/opt/postgresql/postgresql-42.2.5.jar \
+	--jdbc-driver=/opt/postgresql/postgresql-42.2.5.jar
 /sbin/ambari-server setup \
 	--silent \
 	--database=postgres \
@@ -11,7 +11,7 @@ yum install -y ambari-server
 	--databaseport=5432 \
 	--databasename=ambaridb \
 	--postgresschema=ambarischema \
-	--databaseusername=ambari \
+	--databaseusername=ambariuser \
 	--databasepassword=++++++++++++++
 /sbin/ambari-server start
 
