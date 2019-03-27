@@ -31,6 +31,17 @@ yum install -y puppetserver
 /opt/puppetlabs/bin/puppet module install puppetlabs-augeas_core --version 1.0.4
 /opt/puppetlabs/bin/puppet module install puppetlabs-sshkeys_core --version 1.0.2
 /opt/puppetlabs/bin/puppet module install puppetlabs-host_core --version 1.0.2
+/opt/puppetlabs/bin/puppet module install puppetlabs-firewall --version 1.15.2
+/opt/puppetlabs/bin/puppet module install puppetlabs-ntp --version 7.4.0
+/opt/puppetlabs/bin/puppet module install puppet-yum --version 3.1.1
+/opt/puppetlabs/bin/puppet module install puppet-selinux --version 1.6.1
+/opt/puppetlabs/bin/puppet module install puppet-python --version 2.2.2
+/opt/puppetlabs/bin/puppet module install puppet-alternatives --version 3.0.0
+/opt/puppetlabs/bin/puppet module install puppet-logrotate --version 3.4.0
+/opt/puppetlabs/bin/puppet module install puppet-hiera --version 3.3.4
+/opt/puppetlabs/bin/puppet module install puppet-puppetserver --version 3.0.1
+/opt/puppetlabs/bin/puppet module install puppet-nrpe --version 3.0.0
+
 
 
 yum -y install https://yum.theforeman.org/releases/1.21/el7/x86_64/foreman-release.rpm
@@ -56,9 +67,11 @@ cat > /var/lib/pgsql/9.6/data/pg_hba.conf <<EOF
 local   all             postgres                                peer
 host    all             postgres        127.0.0.1/32            ident
 host    all             postgres        ::1/128                 ident
+local   all             puppetdb                                md5
 host    all             puppetdb        127.0.0.1/32            md5
 host    all             puppetdb        ::1/128                 md5
 host    all             puppetdb        10.0.0.0/8              md5
+local   all             foreman                                 md5
 host    all             foreman         127.0.0.1/32            md5
 host    all             foreman         ::1/128                 md5
 host    all             foreman         10.0.0.0/8              md5
@@ -74,6 +87,7 @@ sed -i -e"s/#port = 5432/port = 5432/" /var/lib/pgsql/9.6/data/postgresql.conf
 
 
 { cat | sudo -u postgres psql; } << EOF
+CREATE EXTENSION pg_trgm;
 CREATE DATABASE puppetdb;
 CREATE USER puppetdb WITH PASSWORD '++++++++++++++';
 GRANT ALL PRIVILEGES ON DATABASE puppetdb TO puppetdb;
@@ -103,9 +117,10 @@ EOF
 
 
 # Export Foreman db
+FOREMAN_DB_PASSWORD=`grep password /etc/foreman/database.yml | cut -f2 -d\"`
 cd /tmp
 { cat | sudo -u postgres psql; } << EOF
-CREATE USER foreman WITH PASSWORD '++++++++++++++';
+CREATE USER foreman WITH PASSWORD '${FOREMAN_DB_PASSWORD}';
 EOF
 su postgres -c "pg_restore -C -d postgres foreman.dump"
 
