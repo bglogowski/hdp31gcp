@@ -84,12 +84,12 @@ sed -i -e"s/#port = 5432/port = 5432/" /var/lib/pgsql/9.6/data/postgresql.conf
 /bin/systemctl start postgresql-9.6.service
 
 
-
+PUPPETDB_PASSWORD=`date +%s | sha256sum | base64 | head -c 32`
 
 { cat | sudo -u postgres psql; } << EOF
 CREATE EXTENSION pg_trgm;
 CREATE DATABASE puppetdb;
-CREATE USER puppetdb WITH PASSWORD '++++++++++++++';
+CREATE USER puppetdb WITH PASSWORD '${PUPPETDB_PASSWORD}';
 GRANT ALL PRIVILEGES ON DATABASE puppetdb TO puppetdb;
 \connect puppetdb;
 CREATE SCHEMA puppetdb AUTHORIZATION puppetdb;
@@ -105,7 +105,7 @@ cat > /etc/puppetlabs/puppetdb/conf.d/database.ini <<EOF
 [database]
 subname = //127.0.0.1:5432/puppetdb
 username = puppetdb
-password = ++++++++++++++
+password = ${PUPPETDB_PASSWORD}
 gc-interval = 60
 EOF
 
@@ -125,3 +125,12 @@ EOF
 su postgres -c "pg_restore -C -d postgres foreman.dump"
 
 /bin/systemctl start foreman.service
+
+yum remove -y postgresql postgresql-libs postgresql-server
+/bin/rm -rf /var/lib/pgsql/data
+ln -s /usr/pgsql-9.6/bin/* /usr/bin/
+
+
+grep admin /var/log/messages | sed -e"s/^.*Initial credentials are //" > /root/.the_foreman
+
+
