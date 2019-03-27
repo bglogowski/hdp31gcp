@@ -2,7 +2,7 @@
 PROJECT="marketo-bglogowski-sbx-185600"
 SVC_ACCT="733511848914-compute@developer.gserviceaccount.com"
  
-OS_IMAGE="centos-7-v20190312"
+OS_IMAGE="centos-7-v20190326"
 OS_PROJECT="centos-cloud"
  
 BOOT_DISK="200GB"
