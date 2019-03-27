@@ -22,6 +22,10 @@ yum install -y puppetserver
 /bin/systemctl enable puppetserver
 /bin/systemctl start puppetserver.service
 
+hostname -d > /etc/puppetlabs/puppet/autosign.conf
+chmod 0644 /etc/puppetlabs/puppet/autosign.conf
+
+
 /opt/puppetlabs/bin/puppet agent --test
 
 /opt/puppetlabs/bin/puppet module install puppetlabs-stdlib --version 5.2.0
@@ -134,3 +138,4 @@ grep admin /var/log/messages | sed -e"s/^.*Initial credentials are //" > /root/.
 
 
 /opt/puppetlabs/bin/puppet agent --test
+
