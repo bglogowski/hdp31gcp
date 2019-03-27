@@ -41,6 +41,7 @@ yum install -y puppetserver
 /opt/puppetlabs/bin/puppet module install puppet-hiera --version 3.3.4
 /opt/puppetlabs/bin/puppet module install puppet-puppetserver --version 3.0.1
 /opt/puppetlabs/bin/puppet module install puppet-nrpe --version 3.0.0
+/opt/puppetlabs/bin/puppet module install dalen-puppetdbquery --version 3.0.1
 
 
 
@@ -113,10 +114,8 @@ EOF
 /bin/systemctl start puppetdb.service
 
 /bin/systemctl restart puppetserver.service
-/opt/puppetlabs/bin/puppet agent --test
 
 
-# Export Foreman db
 FOREMAN_DB_PASSWORD=`grep password /etc/foreman/database.yml | cut -f2 -d\"`
 cd /tmp
 { cat | sudo -u postgres psql; } << EOF
@@ -134,3 +133,4 @@ ln -s /usr/pgsql-9.6/bin/* /usr/bin/
 grep admin /var/log/messages | sed -e"s/^.*Initial credentials are //" > /root/.the_foreman
 
 
+/opt/puppetlabs/bin/puppet agent --test
