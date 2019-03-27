@@ -21,6 +21,14 @@ yum -y install https://yum.theforeman.org/releases/1.21/el7/x86_64/foreman-relea
 yum -y install foreman-installer
 foreman-installer
 
+/bin/systemctl stop foreman.service
+
+cd /tmp
+su postgres -c "pg_dump -Fc foreman > foreman.dump"
+
+/bin/systemctl stop postgresql.service
+/bin/systemctl disable postgresql
+
 
 yum install -y https://download.postgresql.org/pub/repos/yum/9.6/redhat/rhel-7-x86_64/pgdg-centos96-9.6-3.noarch.rpm
 yum install -y postgresql96 postgresql96-libs postgresql96-server
@@ -35,10 +43,13 @@ host    all             postgres        ::1/128                 ident
 host    all             puppetdb        127.0.0.1/32            md5
 host    all             puppetdb        ::1/128                 md5
 host    all             puppetdb        10.0.0.0/8              md5
+host    all             foreman         127.0.0.1/32            md5
+host    all             foreman         ::1/128                 md5
+host    all             foreman         10.0.0.0/8              md5
 EOF
 
 sed -i -e"s/#listen_addresses = 'localhost'/listen_addresses = '*'/" /var/lib/pgsql/9.6/data/postgresql.conf
-sed -i -e"s/#port = 5432/port = 5436/" /var/lib/pgsql/9.6/data/postgresql.conf
+sed -i -e"s/#port = 5432/port = 5432/" /var/lib/pgsql/9.6/data/postgresql.conf
 
 /bin/systemctl enable postgresql-9.6
 /bin/systemctl start postgresql-9.6.service
@@ -46,7 +57,7 @@ sed -i -e"s/#port = 5432/port = 5436/" /var/lib/pgsql/9.6/data/postgresql.conf
 
 
 
-{ cat | sudo -u postgres psql -p 5436; } << EOF
+{ cat | sudo -u postgres psql; } << EOF
 CREATE DATABASE puppetdb;
 CREATE USER puppetdb WITH PASSWORD '++++++++++++++';
 GRANT ALL PRIVILEGES ON DATABASE puppetdb TO puppetdb;
@@ -62,7 +73,7 @@ yum install -y puppetdb
 
 cat > /etc/puppetlabs/puppetdb/conf.d/database.ini <<EOF
 [database]
-subname = //127.0.0.1:5436/puppetdb
+subname = //127.0.0.1:5432/puppetdb
 username = puppetdb
 password = ++++++++++++++
 gc-interval = 60
@@ -75,3 +86,11 @@ EOF
 /opt/puppetlabs/bin/puppet agent --test
 
 
+# Export Foreman db
+cd /tmp
+{ cat | sudo -u postgres psql; } << EOF
+CREATE USER foreman WITH PASSWORD '++++++++++++++';
+EOF
+su postgres -c "pg_restore -C -d postgres foreman.dump"
+
+/bin/systemctl start foreman.service

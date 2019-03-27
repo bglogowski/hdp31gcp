@@ -12,7 +12,7 @@ gcloud compute \
         --maintenance-policy=MIGRATE \
         --service-account=${SVC_ACCT} \
         ${SCOPES} \
-	--tags=foreman \
+	--tags=https-server \
         --image=${OS_IMAGE} \
         --image-project=${OS_PROJECT} \
         --boot-disk-size=${BOOT_DISK} \
