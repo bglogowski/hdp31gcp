@@ -2,6 +2,8 @@
 
 #./01-firewall.sh
 #./10-postgresql.sh &
+./05-puppet.sh
+sleep 720
 ./12-ambari.sh &
 ./20-namenodes.sh &
 ./22-resourcemanagers.sh &

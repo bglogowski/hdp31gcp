@@ -39,7 +39,10 @@ chmod 0644 /etc/puppetlabs/puppet/autosign.conf
 # Install Foreman with defaults
 yum -y install https://yum.theforeman.org/releases/1.21/el7/x86_64/foreman-release.rpm
 yum -y install foreman-installer
-foreman-installer
+foreman-installer \
+	 --enable-foreman-plugin-azure \
+	 --enable-foreman-compute-ec2 \
+	 --enable-foreman-compute-gce
 
 # Stop Foreman
 /bin/systemctl stop foreman.service
@@ -131,4 +134,46 @@ grep admin /var/log/messages | sed -e"s/^.*Initial credentials are //" > /root/.
 
 
 /opt/puppetlabs/bin/puppet agent --test
+
+
+hammer hostgroup create \
+	--environment production \
+	--organization "Default Organization" \
+	--location "Default Location" \
+	--name base
+
+hammer hostgroup create \
+	--parent base \
+	--environment production \
+	--organization "Default Organization" \
+	--location "Default Location" \
+	--name puppet
+
+hammer hostgroup create \
+	--parent base \
+	--environment production \
+	--organization "Default Organization" \
+	--location "Default Location" \
+	--name hdp
+
+hammer hostgroup create \
+	--parent hdp \
+	--environment production \
+	--organization "Default Organization" \
+	--location "Default Location" \
+	--name ambari
+
+hammer hostgroup create \
+	--parent hdp \
+	--environment production \
+	--organization "Default Organization" \
+	--location "Default Location" \
+	--name namenode
+
+hammer hostgroup create \
+	--parent hdp \
+	--environment production \
+	--organization "Default Organization" \
+	--location "Default Location" \
+	--name datanode
 
